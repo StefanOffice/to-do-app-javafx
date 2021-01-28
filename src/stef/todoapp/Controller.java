@@ -1,7 +1,10 @@
 package stef.todoapp;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import stef.todoapp.model.TaskItem;
 
 import java.time.LocalDate;
@@ -12,11 +15,19 @@ import java.util.List;
 public class Controller {
     
     private List<TaskItem> tasks;
+    
+    //define references to elements in UI
+    //and connect objects defined in mainview.xml
     @FXML
-    private ListView taskListView;
+    private ListView<TaskItem> taskListView;
+    @FXML
+    private TextArea descriptionArea;
+    @FXML
+    private Label dateArea;
     
     public void initialize() {
         
+        //create example 'dummy' data
         TaskItem task1 = new TaskItem("Review the new technology",
                 "Read through the documentation, take notes and listen to the Martin's presentation about it.",
                 LocalDate.of(2021, Month.FEBRUARY, 15));
@@ -35,8 +46,16 @@ public class Controller {
         
         tasks = new ArrayList<>(List.of(task1, task2, task3, task4, task5));
         
+        //connect the list view with data
         taskListView.getItems().setAll(tasks);
-        
     }
     
+    public void handleClickTaskView(){
+        //grab the selected item
+        TaskItem task = taskListView.getSelectionModel().getSelectedItem();
+        //display the properties from selected item
+        // in appropriate views
+        descriptionArea.setText(task.getTaskDescription());
+        dateArea.setText("Deadline: " + task.getTaskDate().toString());
+    }
 }
