@@ -1,4 +1,3 @@
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.BorderPane?>
 
 <?import javafx.scene.control.ListView?>
@@ -10,8 +9,7 @@
             xmlns:fx="http://javafx.com/fxml">
 
     <left>
-        <ListView fx:id="taskListView"
-                  onMouseClicked="#handleClickTaskView">
+        <ListView fx:id="taskListView">
 
         </ListView>
     </left>
