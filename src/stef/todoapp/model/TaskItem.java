@@ -2,6 +2,8 @@ package stef.todoapp.model;
 
 import java.time.LocalDate;
 
+//using TaskItem name instead of just Task,
+// to avoid confusion and name clashing with Task class from javafx.concurrent package
 public class TaskItem {
 
     private String taskTitle;

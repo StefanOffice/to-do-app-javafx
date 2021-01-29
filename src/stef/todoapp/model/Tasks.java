@@ -34,6 +34,10 @@ public class Tasks {
         this.taskList = todoItems;
     }
     
+    public void addTask(TaskItem task){
+        taskList.add(task);
+    }
+    
     /**
      * loads tasks from memory, runs on application start
      */

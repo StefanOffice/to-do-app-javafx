@@ -6,25 +6,27 @@
 <?import javafx.scene.control.DatePicker?>
 <DialogPane fx:controller="stef.todoapp.NewTaskController"
             xmlns:fx="http://javafx.com/fxml">
-    <headerText>
-        Create a new task
-    </headerText>
     <content>
         <GridPane vgap="15" hgap="15">
             <Label text="Title:"
                    GridPane.rowIndex="0"
                    GridPane.columnIndex="0"/>
-            <TextField GridPane.rowIndex="0"
+            <TextField fx:id="titleArea"
+                        GridPane.rowIndex="0"
                        GridPane.columnIndex="1"/>
+
             <Label text="Description:"
                    GridPane.rowIndex="1"
                    GridPane.columnIndex="0"/>
-            <TextArea GridPane.rowIndex="1"
+            <TextArea fx:id="descriptionArea"
+                    GridPane.rowIndex="1"
                       GridPane.columnIndex="1"/>
+
             <Label text="Deadline:"
                    GridPane.rowIndex="2"
                    GridPane.columnIndex="0"/>
-            <DatePicker GridPane.rowIndex="2"
+            <DatePicker fx:id="datePicker"
+                    GridPane.rowIndex="2"
                         GridPane.columnIndex="1"/>
         </GridPane>
     </content>
