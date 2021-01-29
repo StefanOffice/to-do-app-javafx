@@ -39,7 +39,7 @@ public class MainController {
         });
         
         //connect the list view with data
-        taskListView.getItems().setAll(Tasks.getInstance().getTaskList());
+        taskListView.setItems(Tasks.getInstance().getTaskList());
         taskListView.getSelectionModel().selectFirst();
     }
     
@@ -68,8 +68,6 @@ public class MainController {
         if(result.isPresent() && result.get().equals(ButtonType.OK)){
             NewTaskController newTaskController = fxmlLoader.getController();
             TaskItem newTask = newTaskController.saveNewTaskData();
-            //refresh the list to display the new item
-            taskListView.getItems().setAll(Tasks.getInstance().getTaskList());
             //once user gets back to main window the newly created task will be selected
             taskListView.getSelectionModel().select(newTask);
         }

@@ -1,6 +1,7 @@
 package stef.todoapp.model;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,14 +11,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+
 
 public class Tasks {
     
     private static final Tasks instance = new Tasks();
     private static final String filename = "tasks.txt";
     
-    private List<TaskItem> taskList;
+    private ObservableList<TaskItem> taskList;
     
     //restrict access to the constructor
     private Tasks() {}
@@ -26,12 +27,8 @@ public class Tasks {
         return instance;
     }
     
-    public List<TaskItem> getTaskList() {
+    public ObservableList<TaskItem> getTaskList() {
         return taskList;
-    }
-    
-    public void setTaskList(List<TaskItem> todoItems) {
-        this.taskList = todoItems;
     }
     
     public void addTask(TaskItem task){
@@ -39,7 +36,7 @@ public class Tasks {
     }
     
     /**
-     * loads tasks from memory, runs on application start
+     * loads tasks from memory, (runs on application start)
      */
     public void loadTasks() throws IOException {
         
@@ -67,7 +64,7 @@ public class Tasks {
     
     /**
     *   Saves all current tasks to memory
-     *   runs when closing the application
+     *   (runs when closing the application)
      */
     public void saveTasks() throws IOException {
         // path to the file where tasks should be saved
