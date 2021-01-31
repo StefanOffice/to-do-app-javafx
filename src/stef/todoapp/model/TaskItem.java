@@ -39,9 +39,4 @@ public class TaskItem {
     public void setTaskDate(LocalDate taskDate) {
         this.taskDate = taskDate;
     }
-    
-    @Override
-    public String toString() {
-        return taskTitle;
-    }
 }

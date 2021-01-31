@@ -3,3 +3,5 @@ Reformat the code on x project	;Rewrite the marked parts of the code to make the
 Design the data model in y project	;Draw the UML diagram for all Entities and their relationships	;March 1, 2021
 Prepare the presentation	;Write the slides, add the diagram, add more illustrations, transfer it to USB	;March 5, 2021
 John's birthday	;Call John to wish him a happy birthday.	;June 11, 2021
+a	;a	;January 31, 2021
+b	;b	;January 19, 2021
