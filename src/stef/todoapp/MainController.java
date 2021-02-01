@@ -5,6 +5,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
@@ -140,6 +142,20 @@ public class MainController {
         //if user clicked ok then continue with deletion
         if(clickedButton.isPresent() && clickedButton.get().equals(ButtonType.OK)){
             Tasks.getInstance().deleteTask(task);
+        }
+    }
+    
+    /**
+     * alternative to context menu, runs when user releases a key
+     * @param keyEvent - contains information the event that triggered the method
+     */
+    @FXML
+    public void handleKeyReleased(KeyEvent keyEvent){
+        TaskItem selectedTask = taskListView.getSelectionModel().getSelectedItem();
+        if(selectedTask != null){
+            if(keyEvent.getCode().equals(KeyCode.DELETE)){
+                deleteTask(selectedTask);
+            }
         }
     }
     

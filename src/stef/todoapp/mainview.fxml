@@ -27,7 +27,8 @@
     </top>
 
     <left>
-        <ListView fx:id="taskListView">
+        <ListView fx:id="taskListView"
+        onKeyReleased="#handleKeyReleased">
 
         </ListView>
     </left>
