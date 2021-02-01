@@ -1,5 +1,7 @@
 package stef.todoapp;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -27,6 +29,8 @@ public class MainController {
     private Label dateArea;
     @FXML
     private BorderPane mainViewPane;
+    @FXML
+    private ContextMenu taskContextMenu;
     
     public void initialize() {
         
@@ -71,9 +75,27 @@ public class MainController {
                     }
                 };
                 
+                cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
+                    if(isNowEmpty)
+                        cell.setContextMenu(null);
+                    else
+                        cell.setContextMenu(taskContextMenu);
+                });
+                
                 return cell;
             }
         });
+        
+        taskContextMenu = new ContextMenu();
+        MenuItem delete = new MenuItem("Delete...");
+        delete.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                TaskItem task = taskListView.getSelectionModel().getSelectedItem();
+                deleteTask(task);
+            }
+        });
+        taskContextMenu.getItems().add(delete);
     }
     
     @FXML
@@ -103,6 +125,21 @@ public class MainController {
             TaskItem newTask = newTaskController.saveNewTaskData();
             //once user gets back to main window the newly created task will be selected
             taskListView.getSelectionModel().select(newTask);
+        }
+    }
+    
+    public void deleteTask(TaskItem task){
+        //first display the confirmation box to give the user a chance to canel
+        Alert confirmationBox = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationBox.setTitle("Delete task...");
+        confirmationBox.setHeaderText("Are you sure?");
+        confirmationBox.setContentText(String.format("If you press ok the task with title: '%s' will be deleted. \nPress 'cancel' to go back.", task.getTaskTitle()));
+        
+        //launch the confirmation window and wait for the user to click a button
+        Optional<ButtonType> clickedButton = confirmationBox.showAndWait();
+        //if user clicked ok then continue with deletion
+        if(clickedButton.isPresent() && clickedButton.get().equals(ButtonType.OK)){
+            Tasks.getInstance().deleteTask(task);
         }
     }
     

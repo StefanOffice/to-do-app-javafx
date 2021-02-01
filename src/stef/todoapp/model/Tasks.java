@@ -2,6 +2,7 @@ package stef.todoapp.model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -33,6 +34,10 @@ public class Tasks {
     
     public void addTask(TaskItem task){
         taskList.add(task);
+    }
+    
+    public void deleteTask(TaskItem task){
+        taskList.remove(task);
     }
     
     /**
