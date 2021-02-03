@@ -3,4 +3,5 @@ module toDoApp{
     requires javafx.fxml;
     
     opens stef.todoapp;
+    opens resources;
 }
