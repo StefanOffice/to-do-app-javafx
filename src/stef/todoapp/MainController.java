@@ -1,7 +1,8 @@
 package stef.todoapp;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.application.Platform;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -16,6 +17,7 @@ import stef.todoapp.model.Tasks;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.Optional;
 
 
@@ -33,9 +35,13 @@ public class MainController {
     private BorderPane mainViewPane;
     @FXML
     private ContextMenu taskContextMenu;
+    @FXML
+    private CheckBox btnFilterTasksByTime;
+    private FilteredList<TaskItem> filteredTaskList;
     
     public void initialize() {
         
+        //display the description based on the selected task
         taskListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 //grab the selected task
@@ -46,9 +52,17 @@ public class MainController {
                 dateArea.setText("Deadline: " + task.getTaskDate().format(DateTimeFormatter.ofPattern("MMMM d, yyyy")));
             }
         });
+    
+        //show everything by default
+        filteredTaskList = new FilteredList<>(Tasks.getInstance().getTaskList(), taskItem -> true);
+        
+        //sort the list of tasks
+        SortedList<TaskItem> sortedTaskList =
+                new SortedList<>(filteredTaskList,
+                        Comparator.comparing(TaskItem::getTaskDate));
         
         //connect the list view with data
-        taskListView.setItems(Tasks.getInstance().getTaskList());
+        taskListView.setItems(sortedTaskList);
         taskListView.getSelectionModel().selectFirst();
         
         //setting up the custom cellFactory
@@ -67,18 +81,20 @@ public class MainController {
                             setText(task.getTaskTitle());
                             //color the text of the cell based on the deadline
                             //if deadline is overdue, color it red
-                            if (task.getTaskDate().isBefore(LocalDate.now())) {
+                            if (task.getTaskDate().isBefore(LocalDate.now()))
                                 setTextFill(Color.RED);
                                 //if task's deadline is today color it blue
-                            } else if (task.getTaskDate().equals(LocalDate.now())) {
+                            else if (task.getTaskDate().equals(LocalDate.now()))
                                 setTextFill(Color.BLUE);
-                            }
+                            else
+                                setTextFill(Color.BLACK);
                         }
                     }
                 };
                 
+                //show context menu when task is right-clicked
                 cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
-                    if(isNowEmpty)
+                    if (isNowEmpty)
                         cell.setContextMenu(null);
                     else
                         cell.setContextMenu(taskContextMenu);
@@ -88,14 +104,12 @@ public class MainController {
             }
         });
         
+        //Context menu setup
         taskContextMenu = new ContextMenu();
         MenuItem delete = new MenuItem("Delete...");
-        delete.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                TaskItem task = taskListView.getSelectionModel().getSelectedItem();
-                deleteTask(task);
-            }
+        delete.setOnAction(event -> {
+            TaskItem task = taskListView.getSelectionModel().getSelectedItem();
+            deleteTask(task);
         });
         taskContextMenu.getItems().add(delete);
     }
@@ -130,7 +144,7 @@ public class MainController {
         }
     }
     
-    public void deleteTask(TaskItem task){
+    public void deleteTask(TaskItem task) {
         //first display the confirmation box to give the user a chance to canel
         Alert confirmationBox = new Alert(Alert.AlertType.CONFIRMATION);
         confirmationBox.setTitle("Delete task...");
@@ -140,23 +154,45 @@ public class MainController {
         //launch the confirmation window and wait for the user to click a button
         Optional<ButtonType> clickedButton = confirmationBox.showAndWait();
         //if user clicked ok then continue with deletion
-        if(clickedButton.isPresent() && clickedButton.get().equals(ButtonType.OK)){
+        if (clickedButton.isPresent() && clickedButton.get().equals(ButtonType.OK)) {
             Tasks.getInstance().deleteTask(task);
         }
     }
     
     /**
      * alternative to context menu, runs when user releases a key
+     *
      * @param keyEvent - contains information the event that triggered the method
      */
     @FXML
-    public void handleKeyReleased(KeyEvent keyEvent){
+    public void handleKeyReleased(KeyEvent keyEvent) {
         TaskItem selectedTask = taskListView.getSelectionModel().getSelectedItem();
-        if(selectedTask != null){
-            if(keyEvent.getCode().equals(KeyCode.DELETE)){
+        if (selectedTask != null) {
+            if (keyEvent.getCode().equals(KeyCode.DELETE)) {
                 deleteTask(selectedTask);
             }
         }
+    }
+    
+    @FXML
+    public void handleToggleFilter(){
+        if(btnFilterTasksByTime.isSelected()){
+            //show only today's items
+            filteredTaskList.setPredicate(taskItem -> taskItem.getTaskDate().equals(LocalDate.now()));
+            taskListView.getSelectionModel().selectFirst();
+            if(taskListView.getSelectionModel().getSelectedItem() == null) {
+                descriptionArea.setText("");
+                dateArea.setText("");
+            }
+        }else{
+            filteredTaskList.setPredicate(taskItem -> true);
+            taskListView.getSelectionModel().selectFirst();
+        }
+    }
+    
+    @FXML
+    public void handleClickExit(){
+        Platform.exit();
     }
     
 }
